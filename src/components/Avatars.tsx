@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, User, Award, Code } from 'lucide-react';
+import { Sparkles, User, Award, Code, Lock } from 'lucide-react';
 
 const AvatarCustomization = () => {
   const [activeTab, setActiveTab] = useState("appearance");
