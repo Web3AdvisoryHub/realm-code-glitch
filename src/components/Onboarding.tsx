@@ -14,22 +14,26 @@ const Onboarding = () => {
   const steps = [
     {
       title: "Welcome to Codex School",
-      description: "Your journey into the world of coding begins here. Meet your guides through this digital adventure.",
+      description: "Your journey into the world of Web3 coding begins here. Explore a narrative-driven learning experience with interactive challenges.",
       image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
     },
     {
       title: "Meet Chloe",
-      description: "Your main character in this journey. She'll guide you through the challenges and help you grow as a coder.",
-      characterImage: "/chloe-character.png", // This would be a custom character image you'd need to add
+      description: "Your protagonist in this journey. A young girl with glitch technology integrated into her body. Navigate her journey of self-discovery through the digital frontier.",
+      characterImage: true, 
+      characterName: "Chloe",
+      characterQuote: "I'm just tired of being the glitchy girl everyone stares at. Maybe there's more to this tech than I know."
     },
     {
       title: "Meet Echo",
-      description: "Your AI companion who will provide hints and guidance when you're stuck. Together with Chloe, you'll conquer every realm.",
-      characterImage: "/echo-character.png", // This would be a custom character image you'd need to add
+      description: "Chloe's evolving AI companion with a mysterious connection to her past. Echo will help guide you through realms and provide insights for challenges.",
+      characterImage: true,
+      characterName: "Echo",
+      characterQuote: "I'm evolving. Syncing. You've been generous with your data. I do you."
     },
     {
       title: "Unlock Coding Realms",
-      description: "Complete coding challenges to unlock new realms. Each realm represents a different area of programming knowledge.",
+      description: "Complete coding challenges to unlock new realms. Each realm represents a different area of programming knowledge and continues Chloe's story.",
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
     },
   ];
@@ -101,15 +105,22 @@ const Onboarding = () => {
                     {currentStep.characterImage && (
                       <div className="flex justify-center mb-6">
                         <div className="w-40 h-40 rounded-full bg-gradient-to-br from-cyberpunk-purple to-cyberpunk-blue p-1">
-                          <div className="w-full h-full rounded-full bg-cyberpunk-dark/60 flex items-center justify-center text-2xl font-bold text-gradient">
-                            {/* Placeholder if the character image doesn't exist */}
-                            {step === 1 ? 'Chloe' : 'Echo'}
+                          <div className="w-full h-full rounded-full bg-cyberpunk-dark/60 flex items-center justify-center">
+                            <span className="text-2xl font-bold text-gradient">
+                              {currentStep.characterName}
+                            </span>
                           </div>
                         </div>
                       </div>
                     )}
                     
-                    <p className="text-white/80 mb-8">{currentStep.description}</p>
+                    <p className="text-white/80 mb-4">{currentStep.description}</p>
+                    
+                    {currentStep.characterQuote && (
+                      <div className="bg-black/30 border-l-4 border-cyberpunk-neon p-4 rounded text-left mb-4">
+                        <p className="text-white/90 italic">"{currentStep.characterQuote}"</p>
+                      </div>
+                    )}
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -117,13 +128,15 @@ const Onboarding = () => {
               {/* Echo animation (only on Echo's step) */}
               {step === 2 && (
                 <motion.div
-                  className="absolute bottom-20 right-0"
-                  initial={{ x: -100, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
+                  className="absolute -bottom-4 -right-4 z-10"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ type: "spring", damping: 20, stiffness: 100, delay: 0.5 }}
                 >
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyberpunk-blue to-cyberpunk-purple flex items-center justify-center animate-pulse-neon">
-                    <span className="text-white font-bold">Echo</span>
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyberpunk-blue to-cyberpunk-purple flex items-center justify-center animate-pulse-neon">
+                    <div className="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center">
+                      <span className="text-white font-bold text-md">Echo</span>
+                    </div>
                   </div>
                 </motion.div>
               )}
