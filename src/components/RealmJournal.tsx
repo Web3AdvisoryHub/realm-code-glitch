@@ -1,163 +1,220 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
-import { Lock, Unlock, ArrowRight } from 'lucide-react';
-
-// Define realm data (ideally this would be in a shared file/context)
-const realms = [
-  {
-    id: "logic-nexus",
-    title: "Logic Nexus",
-    description: "Master the fundamentals of programming logic and algorithms. Begin your journey through the core principles that power all software.",
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    unlocked: true,
-    completionPercent: 75,
-    challenges: 12,
-    completedChallenges: 9
-  },
-  {
-    id: "data-matrix",
-    title: "Data Matrix",
-    description: "Explore data structures and manipulation techniques. Learn how to organize and efficiently work with information.",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    unlocked: true,
-    completionPercent: 40,
-    challenges: 15, 
-    completedChallenges: 6
-  },
-  {
-    id: "network-void",
-    title: "Network Void",
-    description: "Discover the fundamentals of web technologies and API development. Connect your applications to the wider digital universe.",
-    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    unlocked: false,
-    completionPercent: 0,
-    challenges: 18,
-    completedChallenges: 0
-  },
-  {
-    id: "quantum-forge",
-    title: "Quantum Forge",
-    description: "Build advanced applications using cutting-edge frameworks and tools. Create complex software architectures.",
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    unlocked: false,
-    completionPercent: 0,
-    challenges: 20,
-    completedChallenges: 0
-  },
-  {
-    id: "ai-sanctuary",
-    title: "AI Sanctuary",
-    description: "Explore the world of artificial intelligence and machine learning. Train models to solve complex problems.",
-    image: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    unlocked: false,
-    completionPercent: 0,
-    challenges: 15,
-    completedChallenges: 0
-  }
-];
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { ArrowRight, Trophy, Star, Clock, Lock, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface RealmJournalProps {
   activeRealmId: string | null;
 }
 
+const realms = {
+  skyverse: {
+    id: 'skyverse',
+    name: 'Skyverse',
+    icon: '🌌',
+    description: 'Master the fundamental principles of Web3 development in this ethereal realm of blockchain knowledge.',
+    unlocked: true,
+    progress: 65,
+    badges: [
+      { name: 'First Steps', icon: '🎯', description: 'Completed your first challenge' },
+      { name: 'Quick Learner', icon: '⚡', description: 'Solved a challenge in under 5 minutes' },
+      { name: 'Code Explorer', icon: '🔍', description: 'Discovered hidden code pattern' },
+    ],
+    challenges: [
+      { id: 1, name: 'Hello Web3', completed: true, difficulty: 'Easy' },
+      { id: 2, name: 'Digital Identity', completed: true, difficulty: 'Easy' },
+      { id: 3, name: 'Blockchain Basics', completed: true, difficulty: 'Medium' },
+      { id: 4, name: 'Smart Contract Intro', completed: false, difficulty: 'Medium' },
+    ],
+  },
+  mirrorfield: {
+    id: 'mirrorfield',
+    name: 'Mirrorfield',
+    icon: '🔮',
+    description: 'Explore the reflective patterns of advanced data structures and algorithms in this mirrored landscape.',
+    unlocked: true,
+    progress: 25,
+    badges: [
+      { name: 'Pattern Matcher', icon: '🧩', description: 'Identified complex pattern' },
+    ],
+    challenges: [
+      { id: 1, name: 'Mirror Arrays', completed: true, difficulty: 'Medium' },
+      { id: 2, name: 'Reflection Recursion', completed: false, difficulty: 'Hard' },
+      { id: 3, name: 'Symmetric Trees', completed: false, difficulty: 'Hard' },
+      { id: 4, name: 'Glass Algorithm', completed: false, difficulty: 'Expert' },
+    ],
+  },
+  vortexia: {
+    id: 'vortexia',
+    name: 'Vortexia',
+    icon: '🌀',
+    description: 'Dive into the swirling vortex of asynchronous programming and state management.',
+    unlocked: false,
+    progress: 0,
+    badges: [],
+    challenges: [],
+  },
+  datascape: {
+    id: 'datascape',
+    name: 'Datascape',
+    icon: '📊',
+    description: 'Navigate the vast landscape of data visualization and manipulation techniques.',
+    unlocked: false,
+    progress: 0,
+    badges: [],
+    challenges: [],
+  },
+};
+
 const RealmJournal = ({ activeRealmId }: RealmJournalProps) => {
-  const activeRealm = realms.find(realm => realm.id === activeRealmId) || realms[0];
+  const activeRealm = activeRealmId ? realms[activeRealmId as keyof typeof realms] : null;
+  
+  if (!activeRealm) {
+    return (
+      <Card className="bg-gradient-to-br from-cyberpunk-dark to-cyberpunk-dark/70 border border-white/10 h-[500px] flex items-center justify-center">
+        <div className="text-center p-8">
+          <MapPin className="w-12 h-12 mx-auto mb-4 text-white/30" />
+          <h3 className="text-xl font-bold text-white/70 mb-2">Select a Realm</h3>
+          <p className="text-white/50 text-sm max-w-xs">
+            Click on a realm from the map to view details and track your progress
+          </p>
+        </div>
+      </Card>
+    );
+  }
   
   return (
-    <div className="h-full">
-      {activeRealmId ? (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <Card className="bg-cyberpunk-dark border border-white/10">
-            <div className="h-40 relative overflow-hidden rounded-t-lg">
-              <div 
-                className="absolute inset-0 bg-cover bg-center" 
-                style={{ backgroundImage: `url(${activeRealm.image})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-cyberpunk-dark via-transparent to-transparent" />
-              <div className="absolute top-4 right-4">
-                <Badge variant="outline" className="bg-black/60 text-white border-none">
-                  {activeRealm.unlocked ? 'Unlocked' : 'Locked'}
-                </Badge>
-              </div>
-            </div>
-            
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-xl md:text-2xl text-gradient">{activeRealm.title}</CardTitle>
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10">
-                  {activeRealm.unlocked ? (
-                    <Unlock className="w-4 h-4 text-cyberpunk-neon" />
-                  ) : (
-                    <Lock className="w-4 h-4 text-white/60" />
-                  )}
-                </div>
-              </div>
-              <CardDescription className="text-white/70">
-                {activeRealm.completedChallenges} of {activeRealm.challenges} challenges completed
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <p className="text-white/80">{activeRealm.description}</p>
-              
-              <div className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span>Progress</span>
-                  <span>{activeRealm.completionPercent}%</span>
-                </div>
-                <Progress 
-                  value={activeRealm.completionPercent} 
-                  className="h-2 bg-white/10" 
-                />
-              </div>
-              
-              <div className="pt-2 grid grid-cols-2 gap-2">
-                <div className="glass-morphism rounded p-2 text-center">
-                  <div className="text-lg font-bold text-gradient">{activeRealm.challenges}</div>
-                  <div className="text-xs text-white/70">Total Challenges</div>
-                </div>
-                <div className="glass-morphism rounded p-2 text-center">
-                  <div className="text-lg font-bold text-gradient">{activeRealm.completedChallenges}</div>
-                  <div className="text-xs text-white/70">Completed</div>
-                </div>
-              </div>
-            </CardContent>
-            
-            <CardFooter>
-              <Button 
-                className={`w-full ${
-                  activeRealm.unlocked 
-                    ? 'bg-gradient-to-r from-cyberpunk-purple to-cyberpunk-neon hover:from-cyberpunk-neon hover:to-cyberpunk-purple text-white' 
-                    : 'bg-white/10 text-white/50 cursor-not-allowed'
-                } group`}
-                disabled={!activeRealm.unlocked}
-              >
-                {activeRealm.unlocked ? 'Enter Realm' : 'Unlock Required'}
-                {activeRealm.unlocked && (
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                )}
-              </Button>
-            </CardFooter>
-          </Card>
-        </motion.div>
-      ) : (
-        <Card className="bg-cyberpunk-dark/60 border border-white/10 h-full flex items-center justify-center p-6 text-center">
-          <div>
-            <h3 className="text-xl font-bold text-gradient mb-2">Select a Realm</h3>
-            <p className="text-white/70">Click on a realm on the map to view details and begin your journey</p>
+    <Card className="bg-gradient-to-br from-cyberpunk-dark to-cyberpunk-dark/70 border border-white/10 h-[500px] overflow-hidden">
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyberpunk-purple to-cyberpunk-neon flex items-center justify-center">
+            <span className="text-xl">{activeRealm.icon}</span>
           </div>
-        </Card>
+          <div>
+            <CardTitle className="text-gradient">{activeRealm.name}</CardTitle>
+            <div className="flex items-center mt-1">
+              <Progress 
+                value={activeRealm.progress} 
+                className="h-2 w-24" 
+              />
+              <span className="text-xs text-white/70 ml-2">{activeRealm.progress}%</span>
+            </div>
+          </div>
+        </div>
+      </CardHeader>
+      
+      <ScrollArea className="h-[380px]">
+        <CardContent className="pt-0">
+          <p className="text-white/80 text-sm mb-6">
+            {activeRealm.description}
+          </p>
+          
+          {activeRealm.unlocked ? (
+            <>
+              {/* Badges section */}
+              {activeRealm.badges.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+                    <Trophy className="w-4 h-4 mr-2 text-cyberpunk-neon" />
+                    Earned Badges
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {activeRealm.badges.map((badge, index) => (
+                      <div 
+                        key={index}
+                        className="group relative"
+                      >
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyberpunk-purple/20 to-cyberpunk-neon/20 flex items-center justify-center border border-white/10">
+                          <span className="text-xl">{badge.icon}</span>
+                        </div>
+                        <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-32 bg-black/80 backdrop-blur-sm text-white text-xs rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                          <p className="font-medium mb-1">{badge.name}</p>
+                          <p className="text-white/70 text-[10px]">{badge.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Challenges section */}
+              <div>
+                <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+                  <Star className="w-4 h-4 mr-2 text-cyberpunk-neon" />
+                  Challenges
+                </h3>
+                <div className="space-y-3">
+                  {activeRealm.challenges.map((challenge) => (
+                    <div 
+                      key={challenge.id}
+                      className="p-3 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="font-medium text-white flex items-center">
+                            {challenge.completed && (
+                              <span className="text-cyberpunk-neon mr-2">✓</span>
+                            )}
+                            {challenge.name}
+                          </h4>
+                          <div className="flex items-center mt-1">
+                            <Badge 
+                              variant="outline" 
+                              className="text-[10px] h-4 bg-white/10 hover:bg-white/20"
+                            >
+                              {challenge.difficulty}
+                            </Badge>
+                            <span className="text-xs text-white/50 ml-2 flex items-center">
+                              <Clock className="w-3 h-3 mr-1" />
+                              ~15 min
+                            </span>
+                          </div>
+                        </div>
+                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <ArrowRight className="h-4 w-4 text-white" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
+                <Lock className="w-8 h-8 text-white/50" />
+              </div>
+              <h3 className="text-lg font-bold text-white/70 mb-2">Realm Locked</h3>
+              <p className="text-white/50 text-sm text-center max-w-xs mb-6">
+                Complete previous challenges to unlock this mysterious realm
+              </p>
+              <Button 
+                variant="outline" 
+                className="border-white/20 text-white hover:bg-white/10"
+              >
+                View Requirements
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </ScrollArea>
+      
+      {activeRealm.unlocked && (
+        <CardFooter className="border-t border-white/10 pt-3 bg-black/20">
+          <Button 
+            className="w-full bg-gradient-to-r from-cyberpunk-purple to-cyberpunk-neon hover:from-cyberpunk-neon hover:to-cyberpunk-purple text-white group"
+          >
+            Enter Realm
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </CardFooter>
       )}
-    </div>
+    </Card>
   );
 };
 

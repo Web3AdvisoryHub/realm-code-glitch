@@ -1,175 +1,152 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Lock, Unlock, Sparkles } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
-// Define realm data
-const realms = [
-  {
-    id: "logic-nexus",
-    title: "Logic Nexus",
-    description: "Master programming fundamentals",
-    position: { x: 20, y: 25 },
-    unlocked: true,
-    completionPercent: 75,
-    challenges: 12,
-    completedChallenges: 9
-  },
-  {
-    id: "data-matrix",
-    title: "Data Matrix",
-    description: "Explore data structures",
-    position: { x: 60, y: 15 },
-    unlocked: true,
-    completionPercent: 40,
-    challenges: 15,
-    completedChallenges: 6
-  },
-  {
-    id: "network-void",
-    title: "Network Void",
-    description: "Discover web technologies",
-    position: { x: 75, y: 60 },
-    unlocked: false,
-    completionPercent: 0,
-    challenges: 18,
-    completedChallenges: 0
-  },
-  {
-    id: "quantum-forge",
-    title: "Quantum Forge",
-    description: "Build advanced applications",
-    position: { x: 30, y: 70 },
-    unlocked: false,
-    completionPercent: 0,
-    challenges: 20,
-    completedChallenges: 0
-  },
-  {
-    id: "ai-sanctuary",
-    title: "AI Sanctuary",
-    description: "Learn machine learning",
-    position: { x: 50, y: 45 },
-    unlocked: false,
-    completionPercent: 0,
-    challenges: 15,
-    completedChallenges: 0
-  }
-];
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
+import { Lock, Unlock, Trophy, MapPin } from 'lucide-react';
 
 interface RealmMapProps {
   activeRealmId: string | null;
   setActiveRealmId: (id: string | null) => void;
 }
 
+const realms = [
+  {
+    id: 'skyverse',
+    name: 'Skyverse',
+    icon: '🌌',
+    position: { top: '20%', left: '30%' },
+    unlocked: true,
+    progress: 65,
+    completedChallenges: 8,
+    totalChallenges: 12,
+  },
+  {
+    id: 'mirrorfield',
+    name: 'Mirrorfield',
+    icon: '🔮',
+    position: { top: '40%', left: '60%' },
+    unlocked: true,
+    progress: 25,
+    completedChallenges: 3,
+    totalChallenges: 12,
+  },
+  {
+    id: 'vortexia',
+    name: 'Vortexia',
+    icon: '🌀',
+    position: { top: '65%', left: '25%' },
+    unlocked: false,
+    progress: 0,
+    completedChallenges: 0,
+    totalChallenges: 15,
+  },
+  {
+    id: 'datascape',
+    name: 'Datascape',
+    icon: '📊',
+    position: { top: '75%', left: '70%' },
+    unlocked: false,
+    progress: 0,
+    completedChallenges: 0,
+    totalChallenges: 18,
+  },
+];
+
 const RealmMap = ({ activeRealmId, setActiveRealmId }: RealmMapProps) => {
   return (
-    <div className="glass-morphism relative rounded-lg p-4 aspect-[4/3] overflow-hidden border border-white/10">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 z-0 digital-noise opacity-30"></div>
-      <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-cyberpunk-purple/20 rounded-full blur-[80px]"></div>
-      <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-cyberpunk-blue/20 rounded-full blur-[100px]"></div>
+    <Card className="p-6 bg-gradient-to-br from-cyberpunk-dark to-cyberpunk-dark/70 border border-white/10 h-[500px] relative overflow-hidden">
+      <h2 className="text-xl font-bold mb-4 text-gradient">Realm Map</h2>
       
-      {/* Grid lines */}
-      <div className="absolute inset-0 grid grid-cols-8 grid-rows-6">
-        {Array.from({ length: 48 }).map((_, i) => (
-          <div key={i} className="border-[0.5px] border-white/5"></div>
+      {/* Digital noise background */}
+      <div className="absolute inset-0 digital-noise opacity-20"></div>
+      
+      {/* Map grid lines */}
+      <div className="absolute inset-0 grid grid-cols-6 grid-rows-6">
+        {Array.from({ length: 36 }).map((_, i) => (
+          <div 
+            key={i} 
+            className="border-t border-l border-white/5 last:border-r last:border-b"
+          ></div>
         ))}
       </div>
-      
-      {/* Realm nodes */}
+
+      {/* Realms */}
       {realms.map((realm) => (
-        <motion.div
+        <div
           key={realm.id}
-          className={`absolute cursor-pointer z-10 ${activeRealmId === realm.id ? 'z-20' : ''}`}
-          style={{ 
-            left: `${realm.position.x}%`, 
-            top: `${realm.position.y}%`,
-            transform: 'translate(-50%, -50%)'
-          }}
-          initial={{ scale: 0.9, opacity: 0.8 }}
-          animate={{ 
-            scale: activeRealmId === realm.id ? 1.1 : 1,
-            opacity: activeRealmId === realm.id ? 1 : 0.9
-          }}
-          whileHover={{ scale: 1.1, opacity: 1 }}
+          className={`absolute cursor-pointer transition-all duration-300 ${
+            activeRealmId === realm.id ? 'z-20 scale-110' : 'z-10 hover:scale-105'
+          }`}
+          style={{ top: realm.position.top, left: realm.position.left }}
           onClick={() => setActiveRealmId(realm.id)}
         >
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className={`
-                  w-16 h-16 rounded-full flex items-center justify-center
-                  ${realm.unlocked 
-                    ? 'bg-gradient-to-br from-cyberpunk-purple/80 to-cyberpunk-blue/80' 
-                    : 'bg-white/10 backdrop-blur-sm'
-                  }
-                  ${activeRealmId === realm.id ? 'ring-2 ring-white/50 shadow-lg shadow-cyberpunk-neon/20' : ''}
-                  transition-all duration-300
-                `}>
-                  <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                    <div className="text-2xl font-bold text-white">
-                      {realm.unlocked ? (
-                        <Unlock className="w-6 h-6 text-white" />
-                      ) : (
-                        <Lock className="w-6 h-6 text-white/60" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="top" className="bg-cyberpunk-dark/90 border border-white/20 backdrop-blur-lg">
-                <p className="font-bold">{realm.title}</p>
-                <p className="text-xs text-white/70">{realm.description}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          {/* Realm name label */}
-          <div className={`
-            absolute top-full left-1/2 -translate-x-1/2 mt-2 text-center
-            ${activeRealmId === realm.id ? 'text-white' : 'text-white/70'}
-            transition-colors duration-300
-          `}>
-            <p className="text-sm font-bold whitespace-nowrap">{realm.title}</p>
-          </div>
-          
-          {/* Connection lines between realms */}
-          {realm.unlocked && (
-            <motion.div 
-              className="absolute z-0" 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ duration: 0.8 }}
+          <div 
+            className={`flex flex-col items-center group ${
+              realm.unlocked 
+                ? 'opacity-100' 
+                : 'opacity-50 grayscale'
+            }`}
+          >
+            <div 
+              className={`relative w-16 h-16 rounded-full flex items-center justify-center ${
+                activeRealmId === realm.id
+                  ? 'animate-pulse-neon'
+                  : ''
+              } ${
+                realm.unlocked
+                  ? 'bg-gradient-to-br from-cyberpunk-purple to-cyberpunk-neon'
+                  : 'bg-white/20'
+              }`}
             >
-              {realms
-                .filter(r => r.unlocked && r.id !== realm.id)
-                .map(connectedRealm => {
-                  // Calculate line coordinates
-                  const targetX = (connectedRealm.position.x - realm.position.x) * 1;
-                  const targetY = (connectedRealm.position.y - realm.position.y) * 1;
-                  const distance = Math.sqrt(targetX * targetX + targetY * targetY);
-                  const angle = Math.atan2(targetY, targetX) * (180 / Math.PI);
-                  
-                  return (
-                    <div 
-                      key={`${realm.id}-${connectedRealm.id}`}
-                      className="absolute top-1/2 left-1/2 h-[1px] bg-gradient-to-r from-cyberpunk-purple/30 to-transparent"
-                      style={{ 
-                        width: `${distance}%`,
-                        transform: `rotate(${angle}deg)`,
-                        transformOrigin: 'left center'
-                      }}
-                    />
-                  );
-                })}
-            </motion.div>
-          )}
-        </motion.div>
+              <span className="text-2xl">{realm.icon}</span>
+              
+              {/* Connection lines to adjacent realms */}
+              {realm.id === 'skyverse' && (
+                <div className="absolute w-32 h-px bg-gradient-to-r from-transparent via-cyberpunk-neon to-transparent -bottom-4 left-16 rotate-45"></div>
+              )}
+              {realm.id === 'mirrorfield' && (
+                <div className="absolute w-32 h-px bg-gradient-to-r from-transparent via-cyberpunk-neon to-transparent -bottom-12 -left-16 rotate-45"></div>
+              )}
+              
+              {/* Realm status indicator */}
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-cyberpunk-dark flex items-center justify-center border-2 border-cyberpunk-dark">
+                {realm.unlocked 
+                  ? <Unlock className="w-3 h-3 text-cyberpunk-neon" /> 
+                  : <Lock className="w-3 h-3 text-white/60" />
+                }
+              </div>
+            </div>
+            
+            <div className={`mt-2 text-center ${activeRealmId === realm.id ? 'block' : 'hidden group-hover:block'}`}>
+              <p className="text-sm font-medium text-white">{realm.name}</p>
+              <div className="flex items-center justify-center mt-1">
+                <Trophy className="w-3 h-3 text-cyberpunk-neon mr-1" />
+                <span className="text-xs text-white/70">{realm.completedChallenges}/{realm.totalChallenges}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       ))}
-    </div>
+      
+      {/* Current location marker */}
+      <div className="absolute top-[20%] left-[30%] animate-ping">
+        <div className="w-2 h-2 rounded-full bg-cyberpunk-neon"></div>
+      </div>
+      
+      {/* Legend */}
+      <div className="absolute bottom-4 left-4 bg-black/30 backdrop-blur-sm rounded-lg p-2 text-xs text-white/70">
+        <div className="flex items-center mb-1">
+          <div className="w-3 h-3 rounded-full bg-gradient-to-br from-cyberpunk-purple to-cyberpunk-neon mr-2"></div>
+          <span>Unlocked Realm</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-3 h-3 rounded-full bg-white/20 mr-2"></div>
+          <span>Locked Realm</span>
+        </div>
+      </div>
+    </Card>
   );
 };
 
