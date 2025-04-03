@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Lock, Unlock, Code, Server, Database } from 'lucide-react';
+import { Lock, Unlock, Code, Server, Database, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const realms = [
   {
@@ -106,12 +107,23 @@ const RealmDetail = ({ realm }: { realm: any }) => {
         </div>
       </div>
       
-      <Button 
-        className={`w-full ${!realm.unlocked ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-gradient-to-r from-cyberpunk-purple to-cyberpunk-neon hover:from-cyberpunk-neon hover:to-cyberpunk-purple text-white'}`}
-        disabled={!realm.unlocked}
-      >
-        {realm.unlocked ? 'Enter Realm' : 'Unlock Required'}
-      </Button>
+      {realm.unlocked ? (
+        <Link to="/realm-hub">
+          <Button 
+            className="w-full bg-gradient-to-r from-cyberpunk-purple to-cyberpunk-neon hover:from-cyberpunk-neon hover:to-cyberpunk-purple text-white group"
+          >
+            Enter Realm Hub
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </Link>
+      ) : (
+        <Button 
+          className="w-full bg-white/10 text-white/50 cursor-not-allowed"
+          disabled
+        >
+          Unlock Required
+        </Button>
+      )}
     </div>
   );
 };
